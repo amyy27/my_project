@@ -5,18 +5,23 @@ date: "March 16, 2016"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Based on the gapminder data, to visualize life expectancies below a certain age in a certain year, use the following:
 
 ```{r}
-summary(cars)
+#read the gapminder data
+gapminder <- read.table(file="data/gapminder-FiveYearData.csv",header=TRUE, sep=",")
+
+#function to use gapminder data to plot the countries with life expectancies below a specified age in a specified year
+lifeyear_plot <- function(lifeexp, year){
+  lifeyear_data <- gapminder[gapminder$lifeExp < lifeexp & gapminder$year==year,]
+  barplot(lifeyear_data$lifeExp, names.arg=lifeyear_data$country, xlab="Country", 
+          ylab="Life expectancy", ylim=c(0, lifeexp+10), main=paste("Countries with life expectancies less than", lifeexp, "in", year))
+}
+
 ```
 
-You can also embed plots, for example:
+Here's an example plot of countries with a life expectancy less than 34 in the year 1962:
 
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+lifeyear_plot(34, 1962)
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
